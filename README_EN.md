@@ -1,5 +1,7 @@
 # Product-Name-NER-for-EE5327701
 
+[中文](./README.md)
+
 This project contains a **Traditional Chinese** Named Entity Recognition (NER) model that can be used to extract **various attributes** from **product names**, such as brand, name, color, etc.
 
 ## Table of Contents
