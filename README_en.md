@@ -28,17 +28,21 @@ Inference examples are provided in the `inference_example.ipynb` notebook. The m
 You can input the product names and the attributes you want to extract and run the following code to perform inference:
 
 ```python
-# Sample data
-inference_data = ['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊', '【Jabra】Elite 4 ANC真無線降噪藍牙耳機 (藍牙5.2雙設備連接)']
+# put attribute here!
 all_attribute = ['品牌', '名稱', '產品', '產品序號', '顏色', '材質', '對象與族群', '適用物體、事件與場所', 
                      '特殊主題', '形狀', '圖案', '尺寸', '重量', '容量', '包裝組合', '功能與規格']
 
-# Perform inference
-result = inference(model, tokenizer, inference_data, all_attribute, batch_size=32)
+# put infernce data here!
+inference_data = ['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊', '【Jabra】Elite 4 ANC真無線降噪藍牙耳機 (藍牙5.2雙設備連接)']
 
-# Process and display results
-result_dict = process_result(result)
-print(result_dict)
+# set device
+config.string_device =  'cuda' if torch.cuda.is_available() else 'cpu'
+config.device = torch.device(config.string_device)
+
+# load model
+model, tokenizer = inference_api.load_model("clw8998/Product-Name-NER-model", device=config.device)
+
+ner_tags = inference_api.get_ner_tags(model, tokenizer, inference_data, all_attribute)
 ```
 
 ### 2.1 Expected Output

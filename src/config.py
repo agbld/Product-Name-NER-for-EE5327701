@@ -32,3 +32,4 @@ max_length = 128
 doc_stride = 64
 hidden = 768
 pad_on_right = True
+ignore_index = -100

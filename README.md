@@ -32,17 +32,21 @@ pip install -r requirements.txt
 推論範例寫在 `inference_example.ipynb` 中，主要可調整的內容包括輸入的商品名稱與想要提取的 NER 屬性。以下為基本推論程式範例：
 
 ```python
-# 範例資料
-inference_data = ['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊', '【Jabra】Elite 4 ANC真無線降噪藍牙耳機 (藍牙5.2雙設備連接)']
+# put attribute here!
 all_attribute = ['品牌', '名稱', '產品', '產品序號', '顏色', '材質', '對象與族群', '適用物體、事件與場所', 
-                 '特殊主題', '形狀', '圖案', '尺寸', '重量', '容量', '包裝組合', '功能與規格']
+                     '特殊主題', '形狀', '圖案', '尺寸', '重量', '容量', '包裝組合', '功能與規格']
 
-# 執行推論
-result = inference(model, tokenizer, inference_data, all_attribute, batch_size=32)
+# put infernce data here!
+inference_data = ['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊', '【Jabra】Elite 4 ANC真無線降噪藍牙耳機 (藍牙5.2雙設備連接)']
 
-# 處理並顯示結果
-result_dict = process_result(result)
-print(result_dict)
+# set device
+config.string_device =  'cuda' if torch.cuda.is_available() else 'cpu'
+config.device = torch.device(config.string_device)
+
+# load model
+model, tokenizer = inference_api.load_model("clw8998/Product-Name-NER-model", device=config.device)
+
+ner_tags = inference_api.get_ner_tags(model, tokenizer, inference_data, all_attribute)
 ```
 
 ### 2.1 部分推論結果

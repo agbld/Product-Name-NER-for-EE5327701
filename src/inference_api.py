@@ -1,20 +1,9 @@
-# %%
 from src import inference_confidence
-from model.QA_bert_dropout_ver import Contextual_BERT
-from transformers import BertTokenizerFast
 from torch.utils.data import DataLoader
 from data_process import dataset
 import torch
-from src import config
-
-# %%
-def average_non_zero(lst):
-    """
-    Calculate the average of non-zero values in the list.
-    Returns 0 if the list contains no non-zero values.
-    """
-    non_zero_values = list(filter(lambda x: x != 0, lst))
-    return sum(non_zero_values) / len(non_zero_values) if non_zero_values else 0
+from model.QA_bert_dropout_ver import Contextual_BERT
+from transformers import BertTokenizerFast
 
 def load_model(path='"clw8998/Product-Name-NER-model', device=torch.device('cpu')):
     """
@@ -23,6 +12,14 @@ def load_model(path='"clw8998/Product-Name-NER-model', device=torch.device('cpu'
     model = Contextual_BERT.from_pretrained(path).to(device)
     tokenizer = BertTokenizerFast.from_pretrained(path)
     return model, tokenizer
+
+def average_non_zero(lst):
+    """
+    Calculate the average of non-zero values in the list.
+    Returns 0 if the list contains no non-zero values.
+    """
+    non_zero_values = list(filter(lambda x: x != 0, lst))
+    return sum(non_zero_values) / len(non_zero_values) if non_zero_values else 0
 
 def inference(model, tokenizer, inference_data, all_attribute, batch_size=32):
     """
@@ -81,44 +78,13 @@ def process_result(result):
 
     return result_dict
 
-if __name__ == '__main__':
-    # %%
-    # put attribute here!
-    all_attribute = ['品牌', '名稱', '產品', '產品序號', '顏色', '材質', '對象與族群', '適用物體、事件與場所', 
-                        '特殊主題', '形狀', '圖案', '尺寸', '重量', '容量', '包裝組合', '功能與規格']
+def get_ner_tags(model, tokenizer, inference_data, all_attribute, batch_size=32):
+    """
+    Perform inference on the input data using the specified model and tokenizer.
+    Returns the inference results.
+    """
+    if not inference_data:
+        return None
 
-    # put infernce data here!
-    inference_data = ['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊', '【Jabra】Elite 4 ANC真無線降噪藍牙耳機 (藍牙5.2雙設備連接)']
-
-    # set device
-    config.string_device =  'cuda' if torch.cuda.is_available() else 'cpu'
-    config.device = torch.device(config.string_device)
-
-    # load model
-    model, tokenizer = load_model("clw8998/Product-Name-NER-model", device=config.device)
-
-    # inference
-    result = inference(model, tokenizer, inference_data, all_attribute, batch_size=32)
-
-    # process result
-    result_dict = process_result(result)
-
-    # %%
-    # use inference data to get result (Should be lower case)
-    print(inference_data[0])
-    result_dict[inference_data[0].lower()]
-
-    # %%
-    # use inference data to get result (Should be lower case)
-    print(inference_data[1])
-    result_dict[inference_data[1].lower()]
-
-    # %%
-    print('【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊')
-    result_dict['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊'.lower()]
-
-    # %%
-    print('【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊')
-    result_dict['【A‵bella浪漫晶飾】方形密碼-深海藍水晶手鍊'.lower()]['品牌']
-
-
+    result = inference(model, tokenizer, inference_data, all_attribute, batch_size)
+    return process_result(result)
