@@ -50,6 +50,8 @@ def inference(inference_loader, model, tokenizer, all_attribute):
                     else:
                         context[offset[idx][0]:offset[idx][1]] = list(token.replace('##', ''))
                 context = "".join(context)
+                # get p_name directly from p_names
+                context = p_name.lower()
 
                 # Add a new entry for each attribute
                 if example_idx % num_of_atts == 0:
