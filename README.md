@@ -1,3 +1,11 @@
+This is an example of the homework only for who notice this branch :) To run this, just follow the instructions below:
+1. Move your Mxxxxxxxx_xxx_assigned_queries.csv to the root directory.
+2. Run NER-relevancy-example.ipynb
+
+You will see a result csv named Mxxxxxxxx-NER-relevancy.csv
+
+---
+
 # Product-Name-NER-for-EE5327701
 
 [English](./README_en.md)
